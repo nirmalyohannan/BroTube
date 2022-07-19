@@ -47,4 +47,4 @@ app.*.map.json
 /android/app/release
 
 # Credentials#nirmal_yohannan
-lib\utilities\credentials.dart
+/lib/utilities/credentials.dart
