@@ -1,0 +1,56 @@
+{
+    "kind": "youtube#channelListResponse",
+    "etag": "YAUuEqA8MkbMfK3--Xly5kcg_Mo",
+    "pageInfo": {
+      "totalResults": 1,
+      "resultsPerPage": 5
+    },
+    "items": [
+      {
+        "kind": "youtube#channel",
+        "etag": "1awj6AmjojzH4UZ8huQc6DPKlG8",
+        "id": "UCoGHeFY7jE2OB_TJS_87MOA",
+        "snippet": {
+          "title": "Brototype Malayalam",
+          "description": "Brototype (Former Crossroads) is Kerala's #1 tech Youtube channel for students looking to frame a good career in the tech industry. Our mission is to make a positive change in the lives of people by providing them with valuable information and actionable steps. \n\nIn this channel,We help you develop coding skills for free by providing various programming tutorials & tech-career topics in Malayalam, that helps you achieve a job in the IT industry.\n\nTo get 24/7 Technical support while watching our tutorials, Sign up for 6 months Crossroads Exclusive Membership,\nLink to Sign up: https://rzp.io/l/crossroads-6Months-Exclusive\n\nFor Enquires, Contact: Ameer: 7034395811 or Kavya: 9061748014\n\nFurther, if you wish to study offline with us in an office environment, You can enroll for Brocamp, Which is a 6-month offline training program where you learn coding skills & let you pay the course fee after placement.cam\n\nBrocamp (former SPS): Visit https://brototype.in/\nCall: 7902606117 or 87146 02027\n",
+          "customUrl": "brototypemalayalam",
+          "publishedAt": "2019-05-26T09:36:06Z",
+          "thumbnails": {
+            "default": {
+              "url": "https://yt3.ggpht.com/dNXHD2XSx1tKug2Qxmf7D20U3ctr35Um4eVZkJHtjv9OBwCb2WqFu3iWg5Mgg31KfnKWo3zthvs=s88-c-k-c0x00ffffff-no-rj",
+              "width": 88,
+              "height": 88
+            },
+            "medium": {
+              "url": "https://yt3.ggpht.com/dNXHD2XSx1tKug2Qxmf7D20U3ctr35Um4eVZkJHtjv9OBwCb2WqFu3iWg5Mgg31KfnKWo3zthvs=s240-c-k-c0x00ffffff-no-rj",
+              "width": 240,
+              "height": 240
+            },
+            "high": {
+              "url": "https://yt3.ggpht.com/dNXHD2XSx1tKug2Qxmf7D20U3ctr35Um4eVZkJHtjv9OBwCb2WqFu3iWg5Mgg31KfnKWo3zthvs=s800-c-k-c0x00ffffff-no-rj",
+              "width": 800,
+              "height": 800
+            }
+          },
+          "localized": {
+            "title": "Brototype Malayalam",
+            "description": "Brototype (Former Crossroads) is Kerala's #1 tech Youtube channel for students looking to frame a good career in the tech industry. Our mission is to make a positive change in the lives of people by providing them with valuable information and actionable steps. \n\nIn this channel,We help you develop coding skills for free by providing various programming tutorials & tech-career topics in Malayalam, that helps you achieve a job in the IT industry.\n\nTo get 24/7 Technical support while watching our tutorials, Sign up for 6 months Crossroads Exclusive Membership,\nLink to Sign up: https://rzp.io/l/crossroads-6Months-Exclusive\n\nFor Enquires, Contact: Ameer: 7034395811 or Kavya: 9061748014\n\nFurther, if you wish to study offline with us in an office environment, You can enroll for Brocamp, Which is a 6-month offline training program where you learn coding skills & let you pay the course fee after placement.cam\n\nBrocamp (former SPS): Visit https://brototype.in/\nCall: 7902606117 or 87146 02027\n"
+          },
+          "country": "IN"
+        },
+        "contentDetails": {
+          "relatedPlaylists": {
+            "likes": "",
+            "uploads": "UUoGHeFY7jE2OB_TJS_87MOA"
+          }
+        },
+        "statistics": {
+          "viewCount": "11976128",
+          "subscriberCount": "210000",
+          "hiddenSubscriberCount": false,
+          "videoCount": "255"
+        }
+      }
+    ]
+  }
+  
