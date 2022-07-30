@@ -17,7 +17,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ? const Text("Search for result")
         : Expanded(
             child: ListView.builder(
-                itemCount: Provider.of<APIYoutube>(context).videoResultsPerPage,
+                itemCount: Provider.of<APIYoutube>(context).videoTitle.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return ListTile(

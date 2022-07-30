@@ -16,9 +16,11 @@ class APIYoutube with ChangeNotifier {
 ////////////////////////////////////
   bool videoSearchLoading = true;
   int videoResultsPerPage = 5;
-  List<String> videoTitle = List.filled(5, ''); //Is Nullable
-  List<String> videoThumbnailUrl = List.filled(5, ''); //Is Nullable
-  List<String> videoDescription = List.filled(5, ''); //Nullable
+  String nextPageToken = '';
+  List<String> videoTitle = List.filled(0, '', growable: true); //Is Nullable
+  List<String> videoThumbnailUrl =
+      List.filled(0, '', growable: true); //Is Nullable
+  List<String> videoDescription = List.filled(0, '', growable: true); //Nullable
 ////////////////////////////////////
 
   Future<void> getChannelModel() async {
@@ -54,7 +56,12 @@ class APIYoutube with ChangeNotifier {
     //return false;
   }
 
+////////////////////////////////////////////////////////////////////////////
+
   Future<void> getSearchModel({required String search}) async {
+    videoTitle.clear();
+    videoDescription.clear();
+    videoThumbnailUrl.clear();
     Map<String, String> parameters = {
       'part': 'snippet',
       'q': search,
@@ -76,19 +83,47 @@ class APIYoutube with ChangeNotifier {
     int nthResult = 0;
 
     while (nthResult < videoResultsPerPage) {
-      videoTitle[nthResult] = json['items'][nthResult]['snippet']['title'];
-      videoThumbnailUrl[nthResult] =
-          json['items'][nthResult]['snippet']['thumbnails']['medium']['url'];
-      videoDescription[nthResult] =
-          json['items'][nthResult]['snippet']['description'];
+      videoTitle.add(json['items'][nthResult]['snippet']['title']);
+      videoThumbnailUrl.add(
+          json['items'][nthResult]['snippet']['thumbnails']['medium']['url']);
+      videoDescription.add(json['items'][nthResult]['snippet']['description']);
 
       // print(videoTitle[nthResult]);
       //print(videoDescription[nthResult]);
       //print(videoThumbnailUrl[nthResult]);
       nthResult++;
     }
+
     videoSearchLoading = false;
     //print('Video Searching status: ${videoSearchLoading.toString()}');
+    notifyListeners();
+
+    nextPageToken = json['nextPageToken'];
+    print('this is the next page toke : $nextPageToken');
+
+    parameters = {
+      'part': 'snippet',
+      'pageToken': nextPageToken,
+      'q': search,
+      'key': API_KEY,
+    };
+    uri = Uri.https(
+      _baseURL,
+      'youtube/v3/search',
+      parameters,
+    );
+
+    response = await http.get(uri, headers: header);
+    json = jsonDecode(response.body);
+    nthResult = 0;
+    while (nthResult < videoResultsPerPage) {
+      videoTitle.add(json['items'][nthResult]['snippet']['title']);
+      videoThumbnailUrl.add(
+          json['items'][nthResult]['snippet']['thumbnails']['medium']['url']);
+      videoDescription.add(json['items'][nthResult]['snippet']['description']);
+
+      nthResult++;
+    }
     notifyListeners();
   }
 }
