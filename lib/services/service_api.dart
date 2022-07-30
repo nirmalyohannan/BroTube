@@ -81,7 +81,9 @@ class APIYoutube with ChangeNotifier {
     Map<String, dynamic> json = jsonDecode(response.body);
 
     int nthResult = 0;
-
+    int videoResultsPerPage = json['pageInfo']['resultsPerPage'];
+    print("Video Results Per Page: $videoResultsPerPage");
+    if (videoResultsPerPage != 0) {}
     while (nthResult < videoResultsPerPage) {
       videoTitle.add(json['items'][nthResult]['snippet']['title']);
       videoThumbnailUrl.add(
@@ -97,33 +99,35 @@ class APIYoutube with ChangeNotifier {
     videoSearchLoading = false;
     //print('Video Searching status: ${videoSearchLoading.toString()}');
     notifyListeners();
+    if (json['nextPageToken'] != null) {
+      nextPageToken = json['nextPageToken'];
+      print('this is the next page toke : $nextPageToken');
 
-    nextPageToken = json['nextPageToken'];
-    print('this is the next page toke : $nextPageToken');
+      parameters = {
+        'part': 'snippet',
+        'pageToken': nextPageToken,
+        'q': search,
+        'key': API_KEY,
+      };
+      uri = Uri.https(
+        _baseURL,
+        'youtube/v3/search',
+        parameters,
+      );
 
-    parameters = {
-      'part': 'snippet',
-      'pageToken': nextPageToken,
-      'q': search,
-      'key': API_KEY,
-    };
-    uri = Uri.https(
-      _baseURL,
-      'youtube/v3/search',
-      parameters,
-    );
+      response = await http.get(uri, headers: header);
+      json = jsonDecode(response.body);
+      nthResult = 0;
+      while (nthResult < videoResultsPerPage) {
+        videoTitle.add(json['items'][nthResult]['snippet']['title']);
+        videoThumbnailUrl.add(
+            json['items'][nthResult]['snippet']['thumbnails']['medium']['url']);
+        videoDescription
+            .add(json['items'][nthResult]['snippet']['description']);
 
-    response = await http.get(uri, headers: header);
-    json = jsonDecode(response.body);
-    nthResult = 0;
-    while (nthResult < videoResultsPerPage) {
-      videoTitle.add(json['items'][nthResult]['snippet']['title']);
-      videoThumbnailUrl.add(
-          json['items'][nthResult]['snippet']['thumbnails']['medium']['url']);
-      videoDescription.add(json['items'][nthResult]['snippet']['description']);
-
-      nthResult++;
+        nthResult++;
+      }
+      notifyListeners();
     }
-    notifyListeners();
   }
 }
