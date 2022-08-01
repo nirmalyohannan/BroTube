@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<APIYoutube>(context, listen: false).getChannelModel();
+    // Provider.of<APIYoutube>(context, listen: false).getChannelModel();
   }
 
   @override

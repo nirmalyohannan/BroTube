@@ -14,6 +14,12 @@ class APIYoutube with ChangeNotifier {
   String channelVideoCount = '';
   bool channelLoading = true;
 ////////////////////////////////////
+
+  String searchNextPageToken = '';
+  Map<String, String> header = {
+    HttpHeaders.contentTypeHeader: 'application/json'
+  };
+  String videoSearchString = '';
   bool videoSearchLoading = true;
   int videoResultsPerPage = 5;
   String nextPageToken = '';
@@ -42,12 +48,12 @@ class APIYoutube with ChangeNotifier {
     );
     // print("Response requesting");
     Response response = await http.get(uri, headers: header);
-    Map<String, dynamic> json = jsonDecode(response.body);
+    Map<String, dynamic> jsonChannel = jsonDecode(response.body);
 
-    channelVideoCount = json['items'][0]['statistics']['videoCount'];
+    channelVideoCount = jsonChannel['items'][0]['statistics']['videoCount'];
     channelThumbnailUrl =
-        json['items'][0]['snippet']['thumbnails']['default']['url'];
-    channelTitle = json['items'][0]['snippet']['localized']['title'];
+        jsonChannel['items'][0]['snippet']['thumbnails']['default']['url'];
+    channelTitle = jsonChannel['items'][0]['snippet']['localized']['title'];
     // print('$channelTitle , $channelVideoCount , $channelThumbnailUrl');
     channelLoading = false;
     notifyListeners();
@@ -59,16 +65,26 @@ class APIYoutube with ChangeNotifier {
 ////////////////////////////////////////////////////////////////////////////
 
   Future<void> getSearchModel({required String search}) async {
+    ///////////
+    try {
+      ////THis is temporary code to check internet availability
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+      }
+    } on SocketException catch (_) {
+      print('not connected');
+    }
+////////////
+    videoSearchString = search;
+    videoSearchLoading = true;
     videoTitle.clear();
     videoDescription.clear();
     videoThumbnailUrl.clear();
     Map<String, String> parameters = {
       'part': 'snippet',
-      'q': search,
+      'q': videoSearchString,
       'key': API_KEY,
-    };
-    Map<String, String> header = {
-      HttpHeaders.contentTypeHeader: 'application/json'
     };
 
     Uri uri = Uri.https(
@@ -78,17 +94,19 @@ class APIYoutube with ChangeNotifier {
     );
 
     Response response = await http.get(uri, headers: header);
-    Map<String, dynamic> json = jsonDecode(response.body);
+    Map<String, dynamic> jsonSearchResult = jsonDecode(response.body);
+    print(jsonSearchResult);
 
     int nthResult = 0;
-    int videoResultsPerPage = json['pageInfo']['resultsPerPage'];
+    int videoResultsPerPage = jsonSearchResult['pageInfo']['resultsPerPage'];
     print("Video Results Per Page: $videoResultsPerPage");
     if (videoResultsPerPage != 0) {}
     while (nthResult < videoResultsPerPage) {
-      videoTitle.add(json['items'][nthResult]['snippet']['title']);
-      videoThumbnailUrl.add(
-          json['items'][nthResult]['snippet']['thumbnails']['medium']['url']);
-      videoDescription.add(json['items'][nthResult]['snippet']['description']);
+      videoTitle.add(jsonSearchResult['items'][nthResult]['snippet']['title']);
+      videoThumbnailUrl.add(jsonSearchResult['items'][nthResult]['snippet']
+          ['thumbnails']['medium']['url']);
+      videoDescription
+          .add(jsonSearchResult['items'][nthResult]['snippet']['description']);
 
       // print(videoTitle[nthResult]);
       //print(videoDescription[nthResult]);
@@ -99,35 +117,48 @@ class APIYoutube with ChangeNotifier {
     videoSearchLoading = false;
     //print('Video Searching status: ${videoSearchLoading.toString()}');
     notifyListeners();
-    if (json['nextPageToken'] != null) {
-      nextPageToken = json['nextPageToken'];
-      print('this is the next page toke : $nextPageToken');
+    if (jsonSearchResult['nextPageToken'] != null) {
+      searchNextPageToken = jsonSearchResult['nextPageToken'];
+    }
 
-      parameters = {
-        'part': 'snippet',
-        'pageToken': nextPageToken,
-        'q': search,
-        'key': API_KEY,
-      };
-      uri = Uri.https(
-        _baseURL,
-        'youtube/v3/search',
-        parameters,
-      );
+    getSearchModelLoadMore();
+    getSearchModelLoadMore();
+  }
 
-      response = await http.get(uri, headers: header);
-      json = jsonDecode(response.body);
-      nthResult = 0;
-      while (nthResult < videoResultsPerPage) {
-        videoTitle.add(json['items'][nthResult]['snippet']['title']);
-        videoThumbnailUrl.add(
-            json['items'][nthResult]['snippet']['thumbnails']['medium']['url']);
-        videoDescription
-            .add(json['items'][nthResult]['snippet']['description']);
+  Future getSearchModelLoadMore() async {
+    if (videoSearchLoading == false) {
+      if (searchNextPageToken != '') {
+        print('this is the next page toke : $searchNextPageToken');
 
-        nthResult++;
+        Map<String, String> parameters = {
+          'part': 'snippet',
+          'pageToken': searchNextPageToken,
+          'q': videoSearchString,
+          'key': API_KEY,
+        };
+        Uri uri = Uri.https(
+          _baseURL,
+          'youtube/v3/search',
+          parameters,
+        );
+
+        Response response = await http.get(uri, headers: header);
+        Map<String, dynamic> jsonSearchResult = jsonDecode(response.body);
+        int nthResult = 0;
+        while (nthResult < videoResultsPerPage) {
+          videoTitle
+              .add(jsonSearchResult['items'][nthResult]['snippet']['title']);
+          videoThumbnailUrl.add(jsonSearchResult['items'][nthResult]['snippet']
+              ['thumbnails']['medium']['url']);
+          videoDescription.add(
+              jsonSearchResult['items'][nthResult]['snippet']['description']);
+
+          nthResult++;
+        }
+        notifyListeners();
       }
-      notifyListeners();
+    } else {
+      while (videoSearchLoading) {}
     }
   }
 }
