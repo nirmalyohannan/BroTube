@@ -1,4 +1,5 @@
 import 'package:brotube/SearchScreen.dart';
+import 'package:brotube/VideoScreen.dart'; //Temporary for testing
 
 import 'package:flutter/material.dart';
 
@@ -63,7 +64,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       Provider.of<APIYoutube>(context, listen: false)
                           .getSearchModel(search: _textEditingController.text);
                     }),
-                    icon: const Icon(Icons.search))
+                    icon: const Icon(Icons.search)),
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return VideoScreen(
+                          videoID: 'ZsLGWY03PBc',
+                        );
+                      }));
+                    },
+                    icon: const Icon(Icons.play_arrow))
               ]),
               SearchScreen()
             ],

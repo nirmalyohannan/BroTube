@@ -27,6 +27,7 @@ class APIYoutube with ChangeNotifier {
   List<String> videoThumbnailUrl =
       List.filled(0, '', growable: true); //Is Nullable
   List<String> videoDescription = List.filled(0, '', growable: true); //Nullable
+  List<String> videoID = List.filled(0, '', growable: true); //Is Nullable
 ////////////////////////////////////
 
   Future<void> getChannelModel() async {
@@ -81,6 +82,7 @@ class APIYoutube with ChangeNotifier {
     videoTitle.clear();
     videoDescription.clear();
     videoThumbnailUrl.clear();
+    videoID.clear();
     Map<String, String> parameters = {
       'part': 'snippet',
       'q': videoSearchString,
@@ -95,7 +97,7 @@ class APIYoutube with ChangeNotifier {
 
     Response response = await http.get(uri, headers: header);
     Map<String, dynamic> jsonSearchResult = jsonDecode(response.body);
-    print(jsonSearchResult);
+    //print(jsonSearchResult);
 
     int nthResult = 0;
     int videoResultsPerPage = jsonSearchResult['pageInfo']['resultsPerPage'];
@@ -107,6 +109,7 @@ class APIYoutube with ChangeNotifier {
           ['thumbnails']['medium']['url']);
       videoDescription
           .add(jsonSearchResult['items'][nthResult]['snippet']['description']);
+      videoID.add(jsonSearchResult['items'][nthResult]['id']['videoId']);
 
       // print(videoTitle[nthResult]);
       //print(videoDescription[nthResult]);
@@ -152,6 +155,7 @@ class APIYoutube with ChangeNotifier {
               ['thumbnails']['medium']['url']);
           videoDescription.add(
               jsonSearchResult['items'][nthResult]['snippet']['description']);
+          videoID.add(jsonSearchResult['items'][nthResult]['id']['videoId']);
 
           nthResult++;
         }

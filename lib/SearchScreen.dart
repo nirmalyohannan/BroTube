@@ -2,6 +2,7 @@ import 'package:brotube/services/service_api.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'VideoScreen.dart';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key? key}) : super(key: key);
@@ -26,18 +27,28 @@ class _SearchScreenState extends State<SearchScreen> {
                           Provider.of<APIYoutube>(context).videoTitle.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: SizedBox(
-                            height: 100,
-                            width: 100,
-                            child: CachedNetworkImage(
-                                imageUrl: Provider.of<APIYoutube>(context)
-                                    .videoThumbnailUrl[index]),
+                        return GestureDetector(
+                          child: ListTile(
+                            leading: SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: CachedNetworkImage(
+                                  imageUrl: Provider.of<APIYoutube>(context)
+                                      .videoThumbnailUrl[index]),
+                            ),
+                            title: Text(Provider.of<APIYoutube>(context)
+                                .videoTitle[index]),
+                            subtitle: Text(Provider.of<APIYoutube>(context)
+                                .videoDescription[index]),
                           ),
-                          title: Text(Provider.of<APIYoutube>(context)
-                              .videoTitle[index]),
-                          subtitle: Text(Provider.of<APIYoutube>(context)
-                              .videoDescription[index]),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) {
+                              return VideoScreen(
+                                  videoID: Provider.of<APIYoutube>(context)
+                                      .videoID[index]);
+                            }));
+                          },
                         );
                       },
                     ),
